@@ -1,0 +1,21 @@
+.form-input {
+  margin: 15px;
+}
+
+label {
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  label {
+    font-size: 21px;
+  }
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
