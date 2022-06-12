@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import Form from "./Components/Form/Form";
+import Gifs from "./Components/Gifs/Gifs";
+import Header from "./Components/Header/Header";
+import getGifs from "./services/getGifs";
 
 function App() {
   const apiKey = "vQ5Co2BXoWe3Ond9dio7NQyzzA1is4T7";
@@ -11,16 +15,7 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     try {
-      fetch(urlAPI)
-        .then((res) => res.json())
-        .then((response) => {
-          const newGifs = response.data.map((gif) => ({
-            url: gif.images.downsized.url,
-            title: gif.title,
-            id: gif.id,
-          }));
-          setGifs(newGifs);
-        });
+      getGifs(urlAPI).then((newGifs) => setGifs(newGifs));
     } catch (error) {
       setFetchingError(true);
       setErrorMessage(error.message);
@@ -28,37 +23,20 @@ function App() {
     }
   }, [urlAPI]);
   return (
-    <div className="App-content container">
-      <h1>Gif Finder</h1>
-      <form>
-        <input
-          type="text"
-          placeholder="What are you looking for?"
-          onChange={(e) => {
-            setQuery(e.target.value);
-          }}
-        />
-        <input
-          type="number"
-          min="1"
-          max="20"
-          value="10"
-          onChange={(e) => {
-            setLimit(e.target.value);
-          }}
-        />
-        <button type="submit">Search</button>
-      </form>
-      {query !== "" && <h2>Results for the search "{query}"</h2>}
-      {fetchingError && errorMessage}
-      <ul className="gif-list">
-        {gifs.map((gif) => (
-          <li key={gif.id}>
-            <h3>{gif.title}</h3>
-            <img src={gif.url} alt={gif.title} width="300" />
-          </li>
-        ))}
-      </ul>
+    <div className="container">
+      <Header />
+      <main className="row">
+        <div className="col-12">
+          <Form
+            query={query}
+            setQuery={setQuery}
+            setLimit={setLimit}
+            fetchingError={fetchingError}
+            errorMessage={errorMessage}
+          />
+          <Gifs gifs={gifs} />
+        </div>
+      </main>
     </div>
   );
 }
